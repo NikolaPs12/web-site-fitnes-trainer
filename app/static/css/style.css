@@ -1,0 +1,62 @@
+:root {
+    --color1: #1a2a3a;
+}
+
+body {
+    background-image: url('../img/fon.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+}
+
+.itd_avatar {
+    border-radius: 30px;
+    width: 70px;
+    height: 70px;
+}
+
+.btn_zapis {
+    position: absolute;
+    right: 50px;
+}
+
+/* Белая полоса */
+.box_content {
+    width: 70%;
+    height: 100%;
+    background-color: aliceblue;
+}
+
+
+.content-block {
+    background-color: #574e39ee;
+    padding: 2rem;
+    min-height: 50vh;
+    margin: 0 15%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+}
+
+.trener-info img{
+    width: 80%;
+    height: 80%;
+    margin-left: 10%;
+}
+
+.text-beja {
+    color: rgb(253, 217, 170);
+}
+
+.block-words {
+    background-color: #8e785b;
+    width: 50%;
+    height: 50%;
+    
+    margin: auto;
+    border-radius: 15px;
+
+}
+
+img {
+  border-radius: 30px; /* Закругляет все углы на 10px */
+}

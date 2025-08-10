@@ -1,0 +1,87 @@
+{% extends "main/base.html" %}
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+
+
+<!-- Services Section -->
+<div class="content-block">
+    <div class="text-center mb-4 mt-4">
+        <img src="static/img/fitnes_logo.png " style="width: 100px;"></img>
+    </div>
+    <div class="card mb-3" style="background: #8e785b00;">
+        <img src="static/img/uslyg.png" class="card-img-top" alt="...">
+        <div class="card-body text-beja" style="background: linear-gradient(135deg, #8e785b 0%, #574425 100%); border-radius: 15px;">
+            <h3 class="card-title fw-bold text-center pb-3">Мы предлагаем вам</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fas fa-dumbbell mb-2" style="font-size: 2rem; color: #ff4d4d;"></i>
+                    <h3 class="fw-bold">Персональные тренировки</h3>
+                    <h5>Индивидуальный подход, разработка программы с учетом ваших целей и особенностей</h5>
+                </div>
+                <div class="col-md-4">
+                    <i class="fas fa-apple-alt mb-2" style="font-size: 2rem; color: #2ecc71;"></i>
+                    <h3 class="fw-bold">Программы питания</h3>
+                    <h5>Персонализированный план питания с расчетом калорий и регулярной корректировкой</h5>
+                </div>
+                <div class="col-md-4">
+                    <i class="fas fa-video mb-2" style="font-size: 2rem; color: #3498db;"></i>
+                    <h3 class="fw-bold">Онлайн консультации</h3>
+                    <h5>Профессиональная поддержка 24/7, видео-консультации и разбор техники упражнений</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="trener-info mt-5 mb-5">
+        <div class="conteiner">
+            <div class="row ">
+                <div class="container mt-3">
+                    <div class="row align-items-center">
+                        <!-- Текст справа -->
+                        <div class="col-md-8 text-beja mb-5"
+                            style="border: 20px solid transparent; border-radius: 30px;">
+                            <h2>Иван Иванов</h2>
+                            <h5>
+                                Профессиональный фитнес-тренер с 10-летним опытом. Специализируется на силовых
+                                тренировках,
+                                коррекции веса и индивидуальных программах питания.
+                                Поможет вам достичь желаемых результатов, сохраняя здоровье и мотивацию.
+                            </h5>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="static/img/trener1.jpg" alt="Тренер" class="img-fluid rounded"
+                                style="max-height: 500px; border-radius: 30px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div class="row align-items-center">
+                        <!-- Фото слева -->
+                        <div class="col-md-4 mb-5">
+                            <img src="static/img/trener4.jpg" alt="Тренер" class="img-fluid rounded"
+                                style="max-height: 500px; border-radius: 30px;">
+                        </div>
+
+                        <!-- Текст справа -->
+                        <div class="col-md-8 text-beja mb-5"
+                            style="border: 20px solid transparent; border-radius: 30px;">
+                            <h2>Дмитрий Соколов</h2>
+                            <h5>
+                                Профессиональный фитнес-тренер с 10-летним опытом. Специализируется на силовых
+                                тренировках,
+                                коррекции веса и индивидуальных программах питания.
+                                Поможет вам достичь желаемых результатов, сохраняя здоровье и мотивацию.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "main/base.html" %}
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="row justify-content-end">
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card" style="width: 18rem; background: linear-gradient(135deg, #8e785b 0%, #574425 100%); border-radius: 15px;">
+                <div class="card-body text-center p-4 text-beja">
+                    <h5 class="card-title">Иван Иванович</h5>
+                    <h6 class="card-subtitle mb-2 text-white-50">Менеджер</h6>
+                    <p class="card-text">
+                        Телефон: +37360000000<br>
+                        Адрес: ул. Ленина, 61<br>
+                        Email: ivan@example.com
+                    </p>
+                    <a href="tel:+37360000000" class="card-link text-beja">Позвонить</a>
+                    <a href="mailto:ivan@example.com" class="card-link text-beja">Написать</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card" style="width: 18rem; background: linear-gradient(135deg, #8e785b 0%, #574425 100%); border-radius: 15px;">
+                <div class="card-body text-center p-4 text-beja">
+                    <h5 class="card-title">Петр Петрович</h5>
+                    <h6 class="card-subtitle mb-2 text-white-50">Тренер</h6>
+                    <p class="card-text">
+                        Телефон: +37360111111<br>
+                        Адрес: ул. Пушкина, 42<br>
+                        Email: petr@example.com
+                    </p>
+                    <a href="tel:+37360111111" class="card-link text-beja">Позвонить</a>
+                    <a href="mailto:petr@example.com" class="card-link text-beja">Написать</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card" style="width: 18rem; background: linear-gradient(135deg, #8e785b 0%, #574425 100%); border-radius: 15px;">
+                <div class="card-body text-center p-4 text-beja">
+                    <h5 class="card-title">Анна Сергеевна</h5>
+                    <h6 class="card-subtitle mb-2 text-white-50">Администратор</h6>
+                    <p class="card-text">
+                        Телефон: +37360222222<br>
+                        Адрес: ул. Гагарина, 15<br>
+                        Email: anna@example.com
+                    </p>
+                    <a href="tel:+37360222222" class="card-link text-beja">Позвонить</a>
+                    <a href="mailto:anna@example.com" class="card-link text-beja">Написать</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

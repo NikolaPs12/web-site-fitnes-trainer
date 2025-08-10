@@ -1,0 +1,79 @@
+{% extends "main/base.html" %}
+{% block title %}Прайс{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="pricing-container">
+        <div class="pricing-card text-beja" style="background: linear-gradient(135deg, #8e785b 0%, #574425 100%); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h2>Базовый тариф</h2>
+                <div class="price">2500₽/мес</div>
+                <ul>
+                    <li>Доступ к тренажерному залу</li>
+                    <li>Базовые тренировки</li>
+                    <li>Консультация тренера</li>
+                    <li>График 8:00 - 22:00</li>
+                </ul>
+            </div>
+            <button class="pricing-button">Выбрать</button>
+        </div>
+
+        <div class="pricing-card text-beja" style="background: linear-gradient(135deg, #8e785b 0%, #574425 100%); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h2>Максимальный тариф</h2>
+                <div class="price">4500₽/мес</div>
+                <ul>
+                    <li>Все включено в базовый тариф</li>
+                    <li>Персональный тренер</li>
+                    <li>Составление программы питания</li>
+                    <li>Безлимитное посещение</li>
+                    <li>Доступ к групповым занятиям</li>
+                </ul>
+            </div>
+            <button class="pricing-button ">Выбрать</button>
+        </div>
+    </div>
+
+    <style>
+    .pricing-container {
+        display: flex;
+        justify-content: center;
+        gap: 4.2rem; /* Increased from 2rem to 2.2rem (10% increase) */
+        padding: 2rem;
+    }
+
+    .pricing-card {
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 400px;
+        text-align: center;
+    }
+
+    .price {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 1rem 0;
+    }
+
+    .pricing-button {
+        background-color: #ffa600;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    .pricing-button:hover {
+        background-color: #8f6702;
+    }
+
+    li {
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
+    }
+    </style></div>
+</div>
+{% endblock %}
