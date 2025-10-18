@@ -33,9 +33,16 @@
                     <a href="" target="_blank" class="btn btn-outline-light"><i class="icon-instagram"></i></a>
                     <a href="" target="_blank" class="btn btn-outline-light"><i class="icon-paper-plane"></i></a>
                 </div>
+                {% if current_user.is_authenticated %}
                 <div class="btn_zapis">
                     <a class="btn btn-warning px-4 fw-bold" href="{{ url_for('zapis.zap') }}">Записаться</a>
                 </div>
+                {% else %}
+                <div class="btn_register">
+                    <small class="text-beja d-inline me-3">Войдите или зарегистрируйтесь <br>что бы записаться на тренироваку</small>
+                    <a class="btn btn-warning px-4 fw-bold" href="{{ url_for('register.register') }}">Регистрация</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>

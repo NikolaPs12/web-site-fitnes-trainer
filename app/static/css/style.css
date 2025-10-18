@@ -20,6 +20,11 @@ body {
     right: 50px;
 }
 
+.btn_register {
+    position: absolute;
+    right: 50px;
+}
+
 /* Белая полоса */
 .box_content {
     width: 70%;
