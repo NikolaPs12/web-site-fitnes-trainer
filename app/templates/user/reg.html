@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
+
     <form method="POST" enctype="multipart/form-data" class="form-control d-flex flex-column gap-3">
         {{ form.hidden_tag() }} 
         {{ form.name(class="form-control", placeholder="name") }}

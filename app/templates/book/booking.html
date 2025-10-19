@@ -1,0 +1,101 @@
+{% extends "main/base.html" %}
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+              <div class="d-flex align-items-center">
+                {% if category == 'success' %}
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                {% elif category == 'danger' %}
+                  <i class="bi bi-exclamation-circle-fill me-2"></i>
+                {% elif category == 'warning' %}
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {% else %}
+                  <i class="bi bi-info-circle-fill me-2"></i>
+                {% endif %}
+                <strong>{{ message }}</strong>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Form Errors -->
+      {% if form.errors %}
+        <div class="alert alert-danger shadow-sm" role="alert">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+          </div>
+          <ul class="list-unstyled mb-0 ms-4">
+            {% for field, errors in form.errors.items() %}
+              {% for error in errors %}
+                <li><i class="bi bi-dot me-2"></i>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+<div class="container py-5">
+  <div class="content-block bg-light p-4 rounded shadow">
+    <h2 class="mb-4 text-center">Форма записи</h2>
+    <form class="row g-3 needs-validation" novalidate method="POST">
+      {{ form.hidden_tag() }}
+
+      <div class="col-md-6">
+        <label for="name" class="form-label">Имя</label>
+        {{ form.client_name(class="form-control", id="name", placeholder="Введите ваше имя") }}
+        <div class="valid-feedback">Отлично!</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="booking_date" class="form-label">Дата записи</label>
+        {{ form.booking_date(class="form-control", id="booking_date", placeholder="Выберите дату") }}
+        <div class="valid-feedback">Отлично!</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        {{ form.client_email(class="form-control", id="email", placeholder="example@mail.com") }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="phone" class="form-label">Телефон</label>
+        {{ form.client_phone(class="form-control", id="phone", placeholder="+7 (999) 999-99-99") }}
+      </div>
+      <div class="col-md-6">
+        <label for="trener_name" class="form-label">Имя тренера</label>
+        {{ form.trener_name(class="form-control", id="trener_name", placeholder="Введите имя тренера") }}
+      </div>
+      <div class="col-md-6">
+        <label for="time_slot" class="form-label">Время</label>
+        {{ form.time_slot(class="form-control", id="time_slot", placeholder="Выберите время") }}
+      </div>
+
+      <div class="col-12">
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="terms" required>
+          <label class="form-check-label" for="terms">
+            Я согласен с условиями предоставления услуг
+          </label>
+          <div class="invalid-feedback">
+            Необходимо согласиться с условиями
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 text-center">
+        {{ form.submit(class="btn btn-primary btn-lg px-5") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

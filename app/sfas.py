@@ -1,46 +1,61 @@
-import psycopg2
-from sqlalchemy import create_engine, text
+# test_db.py
+import sys
+import os
 
-def test_postgres():
-    print("Тестируем подключение к PostgreSQL на порту 5532...")
+# Добавляем текущую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from app import create_app
+from app.extensions import db
+from app.models.users import User
+
+def test_database():
+    app = create_app()
     
-    # Параметры подключения
-    db_params = {
-        'host': 'localhost',
-        'port': 5532,
-        'database': 'mydb', 
-        'user': 'nikola',
-        'password': '1234567890'
-    }
-    
-    # Тест 1: Прямое подключение psycopg2
-    try:
-        conn = psycopg2.connect(**db_params)
-        print("✓ Psycopg2 подключение: УСПЕХ")
+    with app.app_context():
+        print("🔍 Тестируем подключение к базе данных...")
         
-        # Проверим список таблиц
-        cur = conn.cursor()
-        cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'")
-        tables = cur.fetchall()
-        print(f"  Таблицы в базе: {[t[0] for t in tables]}")
+        try:
+            # Проверяем подключение
+            db.session.execute('SELECT 1')
+            print("✅ Подключение к базе данных успешно!")
+            
+            # Пробуем добавить тестового пользователя
+            print("🔄 Добавляем тестового пользователя...")
+            test_user = User(
+                name="Test User",
+                email="test@example.com", 
+                password="testpassword123",
+                phone="1234567890"
+            )
+            
+            db.session.add(test_user)
+            db.session.commit()
+            print("✅ Тестовый пользователь успешно добавлен в базу данных!")
+            
+            # Пробуем выбрать добавленного пользователя
+            print("🔍 Ищем пользователя в базе данных...")
+            user_from_db = User.query.filter_by(email="test@example.com").first()
+            
+            if user_from_db:
+                print(f"✅ Пользователь найден в базе данных:")
+                print(f"   ID: {user_from_db.id}")
+                print(f"   Имя: {user_from_db.name}")
+                print(f"   Email: {user_from_db.email}")
+                print(f"   Телефон: {user_from_db.phone}")
+            else:
+                print("❌ Пользователь не найден в базе данных!")
+                
+        except Exception as e:
+            print(f"❌ Ошибка при работе с базой данных: {str(e)}")
+            db.session.rollback()
         
-        conn.close()
-    except Exception as e:
-        print(f"✗ Psycopg2 ошибка: {e}")
-        return False
-    
-    # Тест 2: SQLAlchemy подключение
-    try:
-        engine = create_engine("postgresql://nikola:1234567890@localhost:5532/mydb")
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT current_database(), current_user"))
-            db_info = result.fetchone()
-            print(f"✓ SQLAlchemy подключение: УСПЕХ")
-            print(f"  База: {db_info[0]}, Пользователь: {db_info[1]}")
-        return True
-    except Exception as e:
-        print(f"✗ SQLAlchemy ошибка: {e}")
-        return False
+        # Проверяем общее количество пользователей
+        try:
+            user_count = User.query.count()
+            print(f"📊 Всего пользователей в базе: {user_count}")
+        except Exception as e:
+            print(f"❌ Ошибка при подсчете пользователей: {str(e)}")
 
 if __name__ == "__main__":
-    test_postgres()
+    test_database()

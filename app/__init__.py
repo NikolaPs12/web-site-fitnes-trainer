@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, Blueprint
 from .extensions import db, login_manager, migrate
 from .config import Config
 from .routes.main import main
-from .routes.zapis import zapis
+from .routes.booking import zapis
 from .routes.contact import contact_bp
 from .routes.prise import prise_bp
 from .routes.register import register_bp
