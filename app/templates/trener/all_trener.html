@@ -1,0 +1,501 @@
+{% extends "main/base.html" %}
+{% block title %}Наши тренеры - FitnesPro{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <!-- Заголовок -->
+    <div class="text-center mb-5">
+        <h1 class="hero-title gradient-text">Наша команда</h1>
+        <p class="hero-subtitle text-beja">Профессиональные тренеры с многолетним опытом</p>
+        <div class="divider mx-auto"></div>
+    </div>
+    
+    <!-- Кнопка добавления для админа -->
+    {% if current_user.is_admin %}
+    <div class="text-center mb-4">
+        <a href="{{ url_for('trener.add_trener') }}" class="btn btn-cta-primary">
+            <i class="fas fa-plus me-2"></i>Добавить тренера
+        </a>
+    </div>
+    {% endif %}
+    
+    <!-- Сетка тренеров -->
+    <div class="row g-4 justify-content-center">
+        {% for trener in treners %}
+        <div class="col-12 col-lg-10 col-xl-8">
+            <div class="card trener-card h-100">
+                <!-- Левая часть - фото -->
+                <div class="trener-header">
+                    <div class="trener-image-wrapper">
+                        {% if trener.avatar %}
+                        <img src="{{ url_for('static', filename='profile_pics/' ~ trener.avatar) }}" 
+                             class="trener-image" 
+                             alt="{{ trener.all_name }}"
+                             loading="lazy">
+                        {% else %}
+                        <div class="trener-image-placeholder">
+                            <i class="fas fa-user-tie fa-2x"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Бейдж тренера -->
+                        <div class="trener-badge">
+                            <span class="badge bg-gradient-primary">ТОП</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Правая часть - контент -->
+                <div class="card-body trener-content">
+                    <!-- Заголовок и соцсети -->
+                    <div class="trener-header-content">
+                        <div>
+                            <h4 class="trener-name mb-1">{{ trener.all_name }}</h4>
+                            <p class="trener-specialty text-beja opacity-75 mb-2">
+                                <i class="fas fa-dumbbell me-2"></i>Фитнес-тренер
+                            </p>
+                        </div>
+                        
+                        <!-- Социальные сети -->
+                        <div class="trener-social">
+                            {% if trener.instagram %}
+                            <a href="https://instagram.com/{{ trener.instagram }}" target="_blank" 
+                            class="btn btn-social-instagram" 
+                            title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            {% endif %}
+                            
+                            {% if trener.telegram %}
+                            <a href="https://t.me/{{ trener.telegram }}" target="_blank" 
+                            class="btn btn-social-telegram" 
+                            title="Telegram">
+                                <i class="fab fa-telegram"></i>
+                            </a>
+                            {% endif %}
+                            
+                            {% if trener.vk %}
+                            <a href="https://vk.com/{{ trener.vk }}" target="_blank" 
+                            class="btn btn-social-vk" 
+                            title="VK">
+                                <i class="fab fa-vk"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Описание -->
+                    <p class="trener-description mb-3">{{ trener.text }}</p>
+                    
+                    <!-- Статистика и навыки -->
+                    <div class="trener-details">
+                        <!-- Статистика -->
+                        <div class="trener-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">5+</div>
+                                <div class="stat-label">Лет опыта</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100+</div>
+                                <div class="stat-label">Клиентов</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4.9</div>
+                                <div class="stat-label">Рейтинг</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Навыки -->
+                        <div class="trener-skills">
+                            <div class="skill-tags">
+                                <span class="skill-tag">Силовые</span>
+                                <span class="skill-tag">Кардио</span>
+                                <span class="skill-tag">Питание</span>
+                                <span class="skill-tag">Реабилитация</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопка записи -->
+                    <div class="trener-footer mt-3">
+                        {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('zapis.zap') }}" class="btn btn-cta-primary trener-btn">
+                            <i class="fas fa-calendar-check me-2"></i>
+                            Записаться на тренировку
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('login.login') }}" class="btn btn-cta-secondary trener-btn">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Войти для записи
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Сообщение если тренеров нет -->
+        <div class="col-12">
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-users fa-4x mb-3"></i>
+                <h3 class="text-beja">Тренеры не найдены</h3>
+                <p class="text-beja opacity-75">Скоро здесь появятся наши профессиональные тренеры</p>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('trener.add_trener') }}" class="btn btn-cta-primary mt-3">
+                    <i class="fas fa-plus me-2"></i>
+                    Добавить тренера
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* Кастомные стили для горизонтальных карточек тренеров */
+.trener-card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    background: linear-gradient(135deg, rgba(142, 120, 91, 0.9) 0%, rgba(87, 68, 37, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: row;
+    min-height: 280px;
+}
+
+.trener-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.trener-header {
+    flex: 0 0 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.trener-image-wrapper {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.trener-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.trener-card:hover .trener-image {
+    transform: scale(1.05);
+}
+
+.trener-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-dark-gold) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-beige);
+}
+
+.trener-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2;
+}
+
+.trener-badge .badge {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.trener-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem !important;
+}
+
+.trener-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.trener-name {
+    font-weight: 700;
+    color: var(--color-beige);
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.trener-specialty {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.trener-social {
+    display: flex;
+    gap: 8px;
+}
+
+.trener-social .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-social-instagram { 
+    background: linear-gradient(45deg, #E4405F, #F77737); 
+}
+.btn-social-telegram { 
+    background: linear-gradient(45deg, #0088cc, #00aced); 
+}
+.btn-social-vk { 
+    background: linear-gradient(45deg, #4C75A3, #5B7FA6); 
+}
+
+.trener-social .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.trener-description {
+    line-height: 1.6;
+    font-size: 0.95rem;
+    color: rgba(253, 217, 170, 0.9);
+    margin-bottom: 1.5rem;
+    flex: 1;
+}
+
+.trener-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+}
+
+.trener-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-beige);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: rgba(253, 217, 170, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.trener-skills {
+    flex: 1;
+    max-width: 200px;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tag {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-beige);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+    background: rgba(255, 193, 7, 0.2);
+    transform: translateY(-1px);
+}
+
+.trener-footer {
+    margin-top: auto;
+}
+
+.trener-btn {
+    border-radius: 15px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 0.9rem;
+}
+
+.trener-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.divider {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(45deg, var(--color-beige), #ffd700);
+    border-radius: 2px;
+}
+
+.empty-state {
+    background: linear-gradient(135deg, rgba(142, 120, 91, 0.6) 0%, rgba(87, 68, 37, 0.6) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.empty-state i {
+    color: var(--color-beige);
+    opacity: 0.7;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .trener-header {
+        flex: 0 0 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .trener-card {
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .trener-header {
+        flex: 0 0 250px;
+        width: 100%;
+    }
+    
+    .trener-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .trener-stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .trener-skills {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .trener-header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .trener-social {
+        align-self: flex-start;
+    }
+    
+    .trener-header {
+        flex: 0 0 200px;
+    }
+    
+    .trener-name {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .trener-content {
+        padding: 1.5rem !important;
+    }
+    
+    .trener-stats {
+        gap: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.1rem;
+    }
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.trener-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Последовательная анимация для карточек */
+.trener-card:nth-child(1) { animation-delay: 0.1s; }
+.trener-card:nth-child(2) { animation-delay: 0.2s; }
+.trener-card:nth-child(3) { animation-delay: 0.3s; }
+.trener-card:nth-child(4) { animation-delay: 0.4s; }
+.trener-card:nth-child(5) { animation-delay: 0.5s; }
+.trener-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
+
+<script>
+// Простой скрипт для плавного появления
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.trener-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

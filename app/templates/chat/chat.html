@@ -1,0 +1,68 @@
+{% extends "main/base.html" %}
+{% block title %}Все записи{% endblock %}
+
+{% block content %}
+<div class="chat-block">
+    <div class="container mt-4">
+        <h2>Чат</h2>
+        <div class="chat-box mb-3" id='messages' style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+            {% for msg in messages %}
+                <div>{{ msg.user_message }}</div>
+            {% endfor %}
+        </div>
+        <form method="POST" action="" id="messageForm">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.user_message.label(class="form-label") }}
+                {{ form.user_message(class="form-control", id="messageInput", placeholder="Введите ваше сообщение...") }}
+            </div>
+            <button id="messageSubmit" type="submit" class="btn btn-primary mt-2">Отправить</button>
+        </form>
+    </div>    
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Автоматический скролл к последнему сообщению
+const socket = io(); 
+const form = document.querySelector('#messageForm');
+const input = document.querySelector('#messageInput');
+const messages = document.querySelector('#messages');
+
+function addMessage(text) {  // Исправлено: addMessages -> addMessage  
+    const div = document.createElement('div');
+    div.textContent = text;  // Исправлено: msg.text -> text
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+// Исправлено: socketio -> socket
+socket.on('chat_history', data => {
+    messages.innerHTML = '';
+    data.forEach(msg => addMessage(msg.message));
+});
+
+socket.on('receive_message', data => {
+    addMessage(data.message);
+});
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    socket.emit('send_message', {message: text});
+    input.value = '';  // Исправлено: innput.valur -> input.value
+});
+
+// Загружаем историю при подключении
+socket.on('connect', function() {
+    console.log("✅ Подключен к чату");
+    socket.emit('get_chat_history');  // Запрашиваем историю
+});
+
+// Убрал setInterval - теперь история загружается через Socket.IO
+</script>
+{% endblock %}

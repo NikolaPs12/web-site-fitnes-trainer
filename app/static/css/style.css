@@ -1,67 +1,440 @@
 :root {
-    --color1: #1a2a3a;
+    --color-beige: #fdd9aa;
+    --color-gold: #8e785b;
+    --color-dark-gold: #574425;
+    --color-bg: #574e39ee;
+    --shadow: 0 8px 32px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     background-image: url('../img/fon.jpg');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.itd_avatar {
-    border-radius: 30px;
-    width: 70px;
-    height: 70px;
+/* Навигация */
+.navbar {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.btn_zapis {
-    position: absolute;
-    right: 50px;
-}
-
-.btn_register {
-    position: absolute;
-    right: 50px;
-}
-
-/* Белая полоса */
-.box_content {
-    width: 70%;
-    height: 100%;
-    background-color: aliceblue;
-}
-
-
-.content-block {
-    background-color: #574e39ee;
-    padding: 2rem;
-    min-height: 50vh;
-    margin: 0 15%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-}
-
-.trener-info img{
-    width: 80%;
-    height: 80%;
-    margin-left: 10%;
-}
-
-.text-beja {
-    color: rgb(253, 217, 170);
-}
-
-.block-words {
-    background-color: #8e785b;
-    width: 50%;
-    height: 50%;
-    
-    margin: auto;
+.navbar-brand img {
     border-radius: 15px;
-
+    width: 60px;
+    height: 60px;
+    transition: var(--transition);
 }
 
+.navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+.navbar-brand h4 {
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+    color: var(--color-beige) !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    margin: 0 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+/* Кнопки */
+.btn_zapis, .btn_register, .btn_trener {
+    position: absolute;
+    transition: var(--transition);
+}
+
+.btn_zapis { right: 50px; }
+.btn_trener { right: 400px; }
+.btn_register { right: 210px; }
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    border: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: var(--transition) !important;
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-outline-light {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    transition: var(--transition);
+}
+
+.btn-outline-light:hover {
+    transform: scale(1.1);
+    background-color: rgba(255,255,255,0.1);
+    
+}
+
+/* Основной контент */
+.content-block {
+    background-color: var(--color-bg);
+    padding: 2.5rem;
+    min-height: 60vh;
+    margin: 2rem 10%;
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-block {
+    background-color: rgba(255,255,255,0.95);
+    padding: 2rem;
+    min-height: 60vh;
+    margin: 2rem 10%;
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+}
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 20px;
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+/* Текст */
+.text-beja {
+    color: var(--color-beige);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.text-beja h1, .text-beja h2, .text-beja h3 {
+    font-weight: 700;
+}
+
+/* Изображения */
 img {
-  border-radius: 30px; /* Закругляет все углы на 10px */
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.img-fluid.rounded {
+    border-radius: 20px !important;
+}
+
+.card-img-top {
+    border-radius: 20px 20px 0 0 !important;
+}
+
+/* Hero Section */
+.hero-block {
+    background: linear-gradient(135deg, rgba(142, 120, 91, 0.9) 0%, rgba(87, 68, 37, 0.9) 100%);
+    border-radius: 25px;
+}
+
+.hero-logo {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+/* Services Section */
+.service-main-card {
+    border: none;
+    border-radius: 25px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.service-main-image {
+    border-radius: 25px 25px 0 0;
+    height: 300px;
+    object-fit: cover;
+}
+
+.service-card-body {
+    background: linear-gradient(135deg, #8e785b 0%, #574425 100%);
+    border-radius: 0 0 25px 25px;
+    padding: 3rem 2rem;
+}
+
+.service-main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fdd9aa;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.service-item {
+    padding: 2rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.service-item:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.service-icon-wrapper {
+    margin-bottom: 1.5rem;
+}
+
+.service-icon {
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
+
+.service-item-title {
+    font-size: 1.5rem;
+    color: #fdd9aa;
+    margin-bottom: 1rem;
+}
+
+.service-item-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(253, 217, 170, 0.9);
+}
+
+/* CTA Section */
+.cta-content {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, rgba(142, 120, 91, 0.9) 0%, rgba(87, 68, 37, 0.9) 100%);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cta-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.cta-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.btn-cta-primary {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cta-secondary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cta-primary:hover,
+.btn-cta-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Формы */
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    padding: 12px 15px;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content-block, .chat-block {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Градиентный текст */
+.gradient-text {
+    background: linear-gradient(135deg, #fdd9aa 0%, #ffd700 50%, #ffa500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .content-block, .chat-block {
+        margin: 2rem 5%;
+    }
+}
+
+@media (max-width: 992px) {
+    .btn_zapis, .btn_register, .btn_trener {
+        position: static;
+        margin: 10px 0;
+        text-align: center;
+    }
+    
+    .navbar-collapse {
+        text-align: center;
+        padding: 20px 0;
+    }
+    
+    .navbar-nav {
+        margin-bottom: 15px;
+    }
+    
+    .content-block {
+        padding: 1.5rem;
+        margin: 1rem 2%;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .service-main-title {
+        font-size: 2rem;
+    }
+    
+    .cta-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        margin: 0 10px !important;
+    }
+    
+    .content-block {
+        padding: 1rem;
+        margin: 0.5rem 1%;
+        border-radius: 15px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .service-main-title {
+        font-size: 1.6rem;
+    }
+    
+    .cta-title {
+        font-size: 1.5rem;
+    }
+    
+    .btn-cta-primary,
+    .btn-cta-secondary {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+/* Benefits Section */
+.benefits-section .benefit-item {
+    background: linear-gradient(135deg, rgba(142, 120, 91, 0.8) 0%, rgba(87, 68, 37, 0.8) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.benefits-section .benefit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    color: var(--color-beige);
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Адаптивность для benefits */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .benefit-item {
+        padding: 1.5rem !important;
+    }
 }

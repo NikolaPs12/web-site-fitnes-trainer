@@ -1,87 +1,125 @@
 {% extends "main/base.html" %}
-{% block title %}Главная страница{% endblock %}
+{% block title %}Главная страница - FitnesPro{% endblock %}
 
 {% block content %}
 
+<!-- Hero Section -->
+<section class="hero-section mb-5">
+    <div class="content-block hero-block">
+        <div class="text-center mb-5">
+            <img src="{{ url_for('static', filename='img/fitnes_logo.png') }}" alt="FitnesPro Logo" class="hero-logo">
+            <h1 class="hero-title gradient-text mt-3">Добро пожаловать в FitnesPro</h1>
+            <p class="hero-subtitle text-beja">Премиум фитнес-опыт для достижения ваших целей</p>
+        </div>
+    </div>
+</section>
 
 <!-- Services Section -->
-<div class="content-block">
-    <div class="text-center mb-4 mt-4">
-        <img src="static/img/fitnes_logo.png " style="width: 100px;"></img>
-    </div>
-    <div class="card mb-3" style="background: #8e785b00;">
-        <img src="static/img/uslyg.png" class="card-img-top" alt="...">
-        <div class="card-body text-beja" style="background: linear-gradient(135deg, #8e785b 0%, #574425 100%); border-radius: 15px;">
-            <h3 class="card-title fw-bold text-center pb-3">Мы предлагаем вам</h3>
-            <div class="row">
-                <div class="col-md-4">
-                    <i class="fas fa-dumbbell mb-2" style="font-size: 2rem; color: #ff4d4d;"></i>
-                    <h3 class="fw-bold">Персональные тренировки</h3>
-                    <h5>Индивидуальный подход, разработка программы с учетом ваших целей и особенностей</h5>
-                </div>
-                <div class="col-md-4">
-                    <i class="fas fa-apple-alt mb-2" style="font-size: 2rem; color: #2ecc71;"></i>
-                    <h3 class="fw-bold">Программы питания</h3>
-                    <h5>Персонализированный план питания с расчетом калорий и регулярной корректировкой</h5>
-                </div>
-                <div class="col-md-4">
-                    <i class="fas fa-video mb-2" style="font-size: 2rem; color: #3498db;"></i>
-                    <h3 class="fw-bold">Онлайн консультации</h3>
-                    <h5>Профессиональная поддержка 24/7, видео-консультации и разбор техники упражнений</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="trener-info mt-5 mb-5">
-        <div class="conteiner">
-            <div class="row ">
-                <div class="container mt-3">
-                    <div class="row align-items-center">
-                        <!-- Текст справа -->
-                        <div class="col-md-8 text-beja mb-5"
-                            style="border: 20px solid transparent; border-radius: 30px;">
-                            <h2>Иван Иванов</h2>
-                            <h5>
-                                Профессиональный фитнес-тренер с 10-летним опытом. Специализируется на силовых
-                                тренировках,
-                                коррекции веса и индивидуальных программах питания.
-                                Поможет вам достичь желаемых результатов, сохраняя здоровье и мотивацию.
-                            </h5>
-                        </div>
-                        <div class="col-md-4">
-                            <img src="static/img/trener1.jpg" alt="Тренер" class="img-fluid rounded"
-                                style="max-height: 500px; border-radius: 30px;">
+<section class="services-section mb-5">
+    <div class="content-block">
+        <div class="card service-main-card">
+            <img src="{{ url_for('static', filename='img/uslyg.png') }}" class="card-img-top service-main-image" alt="Наши услуги">
+            <div class="card-body service-card-body">
+                <h2 class="card-title service-main-title text-center mb-5">Мы предлагаем вам</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="service-item text-center">
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-dumbbell service-icon"></i>
+                            </div>
+                            <h3 class="service-item-title fw-bold mb-3">Персональные тренировки</h3>
+                            <p class="service-item-description">Индивидуальный подход, разработка программы с учетом ваших целей и особенностей организма. Максимальный результат за минимальное время.</p>
                         </div>
                     </div>
-                </div>
-                <div class="container mt-3">
-                    <div class="row align-items-center">
-                        <!-- Фото слева -->
-                        <div class="col-md-4 mb-5">
-                            <img src="static/img/trener4.jpg" alt="Тренер" class="img-fluid rounded"
-                                style="max-height: 500px; border-radius: 30px;">
+                    <div class="col-md-4">
+                        <div class="service-item text-center">
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-apple-alt service-icon"></i>
+                            </div>
+                            <h3 class="service-item-title fw-bold mb-3">Программы питания</h3>
+                            <p class="service-item-description">Персонализированный план питания с расчетом калорий, БЖУ и регулярной корректировкой. Здоровое питание без строгих диет.</p>
                         </div>
-
-                        <!-- Текст справа -->
-                        <div class="col-md-8 text-beja mb-5"
-                            style="border: 20px solid transparent; border-radius: 30px;">
-                            <h2>Дмитрий Соколов</h2>
-                            <h5>
-                                Профессиональный фитнес-тренер с 10-летним опытом. Специализируется на силовых
-                                тренировках,
-                                коррекции веса и индивидуальных программах питания.
-                                Поможет вам достичь желаемых результатов, сохраняя здоровье и мотивацию.
-                            </h5>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="service-item text-center">
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-video service-icon"></i>
+                            </div>
+                            <h3 class="service-item-title fw-bold mb-3">Онлайн консультации</h3>
+                            <p class="service-item-description">Профессиональная поддержка 24/7, видео-консультации и разбор техники упражнений. Тренер всегда на связи.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
+<!-- Benefits Section -->
+<section class="benefits-section mb-5">
+    <div class="content-block">
+        <div class="text-center mb-5">
+            <h2 class="section-title gradient-text">Почему выбирают нас?</h2>
+            <p class="section-subtitle text-beja">Преимущества, которые делают нас лучшими</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="benefit-item text-center p-4">
+                    <i class="fas fa-award benefit-icon mb-3"></i>
+                    <h4 class="text-beja fw-bold">Профессионализм</h4>
+                    <p class="text-beja">Все тренеры имеют сертификаты и многолетний опыт работы в фитнес-индустрии</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-item text-center p-4">
+                    <i class="fas fa-clock benefit-icon mb-3"></i>
+                    <h4 class="text-beja fw-bold">Гибкий график</h4>
+                    <p class="text-beja">Тренировки в удобное для вас время, включая раннее утро и поздний вечер</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-item text-center p-4">
+                    <i class="fas fa-dumbbell benefit-icon mb-3"></i>
+                    <h4 class="text-beja fw-bold">Современное оборудование</h4>
+                    <p class="text-beja">Тренажеры последнего поколения и качественный инвентарь для эффективных тренировок</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="benefit-item text-center p-4">
+                    <i class="fas fa-heart benefit-icon mb-3"></i>
+                    <h4 class="text-beja fw-bold">Индивидуальный подход</h4>
+                    <p class="text-beja">Программы, разработанные specifically под ваши цели и физические возможности</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section mt-5">
+    <div class="content-block text-center">
+        <div class="cta-content">
+            <h2 class="cta-title gradient-text mb-4">Готовы начать свой путь к идеальной форме?</h2>
+            <p class="cta-subtitle text-beja mb-4">Присоединяйтесь к FitnesPro сегодня и получите первую консультацию бесплатно!</p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('zapis.zap') }}" class="btn btn-cta-primary btn-lg">
+                <i class="fas fa-calendar-plus me-2"></i>Записаться на тренировку
+            </a>
+            {% else %}
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('register.register') }}" class="btn btn-cta-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Начать сейчас
+                </a>
+                <a href="{{ url_for('trener.treners') }}" class="btn btn-cta-secondary btn-lg">
+                    <i class="fas fa-users me-2"></i>Наши тренеры
+                </a>
+                <a href="{{ url_for('login.login') }}" class="btn btn-outline-warning btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Войти
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
 
 {% endblock %}

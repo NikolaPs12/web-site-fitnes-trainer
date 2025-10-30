@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, Request, Blueprint, url_for, flash
-from ..extensions import db, login_manager, migrate
+from ..extensions import db, login_manager, migrate, socketio
 from ..forms import SimpleBookingForm
 from ..models.zapis import Booking
+from ..models.dbtren import Trener
 from flask import current_app as app
 from datetime import datetime, timedelta
+from ..functions import admin_required
+from flask_socketio import emit
 import secrets
 
 zapis = Blueprint('zapis', __name__)
@@ -32,8 +35,8 @@ def zap():
         
         # ✅ ПРАВИЛЬНОЕ создание новой брони
         new_booking = Booking(
-            client_name=form.client_name.data,      # ✅ Правильное имя
-            client_email=form.client_email.data,    # ✅ Нужно добавить в модель!
+            client_name=form.client_name.data,
+            client_email=form.client_email.data,
             client_phone=form.client_phone.data,    # ✅ Правильное имя
             trener_name=form.trener_name.data,      # ✅ Правильное имя
             booking_date=form.booking_date.data,    # ✅ Правильное имя
@@ -61,3 +64,11 @@ def test_flash():
     flash('⚠️ Тестовое предупреждение!', 'warning')
     flash('❌ Тестовое сообщение об ошибке!', 'danger')
     return redirect(url_for('zapis.zap'))
+
+@zapis.route('/all_bookings', methods=['GET'])
+@admin_required
+def all_bookings():    
+    bookings = Booking.query.order_by(Booking.booking_date.desc(), Booking.start_time.desc()).all()
+    return render_template('book/all_bookings.html', bookings=bookings)
+
+

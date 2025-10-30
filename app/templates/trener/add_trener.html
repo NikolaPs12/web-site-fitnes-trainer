@@ -1,0 +1,263 @@
+{% extends "main/base.html" %}
+{% block title %}Добавление тренера - FitnesPro{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <!-- Заголовок -->
+            <div class="text-center mb-5">
+                <h1 class="hero-title gradient-text">Добавление нового тренера</h1>
+                <p class="hero-subtitle text-dark">Заполните информацию о новом тренере команды FitnesPro</p>
+            </div>
+
+            <!-- Форма -->
+            <div class="card form-card">
+                <div class="card-body p-5">
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Основная информация -->
+                        <div class="row g-4">
+                            <!-- Имя тренера -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="name" class="form-label fw-bold h5 text-dark">
+                                        <i class="fas fa-user me-2 text-warning"></i>Имя тренера:
+                                    </label>
+                                    {{ form.all_name(class="form-control form-control-lg custom-input", placeholder="Введите полное имя тренера") }}
+                                    {% if form.all_name.errors %}
+                                        <div class="text-danger mt-2">
+                                            {% for error in form.all_name.errors %}
+                                                <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Описание -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="description" class="form-label fw-bold h5 text-dark">
+                                        <i class="fas fa-file-alt me-2 text-warning"></i>О тренере:
+                                    </label>
+                                    {{ form.text(class="form-control custom-textarea", rows="6", placeholder="Опишите опыт работы, специализацию, достижения тренера...") }}
+                                    {% if form.text.errors %}
+                                        <div class="text-danger mt-2">
+                                            {% for error in form.text.errors %}
+                                                <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Фото -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="avatar" class="form-label fw-bold h5 text-dark">
+                                        <i class="fas fa-camera me-2 text-warning"></i>Фото тренера:
+                                    </label>
+                                    <div class="file-input-wrapper">
+                                        {{ form.avatar(class="form-control custom-file-input", accept="image/*") }}
+                                        <div class="file-input-overlay">
+                                            <i class="fas fa-cloud-upload-alt me-2"></i>
+                                            <span>Выберите файл</span>
+                                        </div>
+                                    </div>
+                                    {% if form.avatar.errors %}
+                                        <div class="text-danger mt-2">
+                                            {% for error in form.avatar.errors %}
+                                                <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        Рекомендуемый размер: 400x500px, формат: JPG, PNG
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Социальные сети -->
+                        <div class="mt-5">
+                            <h4 class="text-dark fw-bold mb-4">
+                                <i class="fas fa-share-alt me-2 text-warning"></i>Социальные сети:
+                            </h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-dark fw-semibold">
+                                            <i class="fab fa-instagram me-2" style="color: #E4405F;"></i>Instagram
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-secondary text-light">@</span>
+                                            {{ form.instagram(class="form-control custom-input", placeholder="username") }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-dark fw-semibold">
+                                            <i class="fab fa-telegram me-2" style="color: #0088cc;"></i>Telegram
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-secondary text-light">@</span>
+                                            {{ form.telegram(class="form-control custom-input", placeholder="username") }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-dark fw-semibold">
+                                            <i class="fab fa-vk me-2" style="color: #4C75A3;"></i>VK
+                                        </label>
+                                        {{ form.vk(class="form-control custom-input", placeholder="id123456789 или username") }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label text-dark fw-semibold">
+                                            <i class="fab fa-whatsapp me-2" style="color: #25D366;"></i>WhatsApp
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-secondary text-light">+7</span>
+                                            {{ form.whatsapp(class="form-control custom-input", placeholder="9991234567") }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка отправки -->
+                        <div class="mt-5">
+                            {{ form.submit(class="btn btn-warning btn-lg w-100 py-3 fw-bold") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.form-card:hover {
+    box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+}
+
+.custom-input, .custom-textarea, .custom-file-input {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    color: #495057;
+    transition: all 0.3s ease;
+    padding: 12px 15px;
+}
+
+.custom-input:focus, .custom-textarea:focus, .custom-file-input:focus {
+    background: #ffffff;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    color: #495057;
+}
+
+.custom-input::placeholder, .custom-textarea::placeholder {
+    color: #6c757d;
+}
+
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-file-input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-overlay {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-input-overlay:hover {
+    background: #e9ecef;
+    border-color: #ffc107;
+    color: #495057;
+}
+
+.input-group-text {
+    background: #6c757d !important;
+    border: 2px solid #e9ecef;
+    border-right: none;
+    color: #ffffff !important;
+}
+
+.form-text {
+    font-size: 0.85rem;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-card {
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+</style>
+{% endblock %}

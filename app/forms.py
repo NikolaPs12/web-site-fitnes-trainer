@@ -1,11 +1,13 @@
-from dataclasses import field
-from wtforms import StringField, PasswordField, validators, DateField, SubmitField, BooleanField, SelectField   
+from wtforms import StringField, PasswordField, FileField, DateField, SubmitField, BooleanField, SelectField, TextAreaField  # ✅ ДОБАВЛЕНО TextAreaField
 from flask_wtf import FlaskForm
+from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_wtf.file import FileAllowed
 from .models.users import User
 from datetime import date, timedelta
 from .models.zapis import Booking, WorkingHours
+from .models.dbtren import Trener
+# ✅ УДАЛЕНО: дублирующийся импорт FileAllowed
 
 
 class SimpleBookingForm(FlaskForm):
@@ -15,10 +17,11 @@ class SimpleBookingForm(FlaskForm):
         Length(min=2, max=100, message="Имя должно быть от 2 до 100 символов")
     ])
     
-    trener_name = StringField('Имя тренера*', validators=[
-        DataRequired(message="Обязательное поле"), 
-        Length(min=2, max=50, message="Имя тренера должно быть от 2 до 50 символов")
-    ])
+    trener_name = QuerySelectField(
+        'Категория',
+        query_factory=lambda: Trener.query.all(),
+        get_label='all_name'
+    )
 
     client_email = StringField('Email*', validators=[
         DataRequired(message="Обязательное поле"),
@@ -36,19 +39,9 @@ class SimpleBookingForm(FlaskForm):
     ], format='%Y-%m-%d')
     
     # Время бронирования (выпадающий список)
-    time_slot = SelectField('Время*', choices=[
-            ('09:00', '09:00 - 10:00'),
-            ('10:00', '10:00 - 11:00'),
-            ('11:00', '11:00 - 12:00'),
-            ('12:00', '12:00 - 13:00'),
-            ('13:00', '13:00 - 14:00'),
-            ('14:00', '14:00 - 15:00'),
-            ('15:00', '15:00 - 16:00'),
-            ('16:00', '16:00 - 17:00'),
-            ('17:00', '17:00 - 18:00')
-        ], validators=[
+    time_slot = SelectField('Время*', validators=[
         DataRequired(message="Выберите время")
-    ])
+    ]) 
     
     submit = SubmitField('Забронировать')
 
@@ -95,3 +88,18 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     phone = StringField('Phone', validators=[Length(max=20)])
     submit = SubmitField('Login')      
+
+class ChatForm(FlaskForm):
+    user_message = StringField('Сообщение', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Отправить')
+
+class AddTrener(FlaskForm):
+    all_name = StringField('Введите ФИО', validators=[DataRequired(), Length(min=2, max=50)])
+    avatar = FileField('Загрузите фото', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    text = TextAreaField('О тренере', validators=[DataRequired()])
+    # ✅ Добавляем поля для социальных сетей
+    instagram = StringField('Instagram (username)')
+    telegram = StringField('Telegram (username)')
+    vk = StringField('VK (username)')
+    whatsapp = StringField('WhatsApp (номер)')
+    submit = SubmitField('Добавить тренера')

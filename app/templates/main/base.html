@@ -1,60 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FitnesPro - профессиональный фитнес-центр с персональными тренировками">
+    
+    <!-- Оптимизированные подключения -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/fontello.css">
-    <link rel="stylesheet" href="static/css/style.css">
-    <title>fitnes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontello.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <title>{% block title %}FitnesPro - Профессиональный фитнес-центр{% endblock %}</title>
 </head>
 
 <body class="white-rectangle">
-
-    <nav class="navbar navbar-expand-lg sticky-top navbar-dark mx-5 rounded-3" style="background-color: #05090cda;">
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark mx-3 mx-md-5 rounded-4 mt-2 custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><img src="static/img/fitnes_logo.png " class="itd_avatar"></img></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
+                <img src="{{ url_for('static', filename='img/fitnes_logo.png') }}" alt="FitnesPro Logo" class="navbar-logo me-3">
+                <h4 class="brand-title gradient-text mb-0">FitnesPro</h4>
+            </a>
+            
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <h4 class="text-beja">FitnesPro</h4>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" aria-current="page" href="/">Главная</a>
-                    <a class="nav-link" href="{{ url_for('contact.contact') }}">Контакты</a>
-                    <a class="nav-link" href="{{ url_for('prise.prise') }}">Прайс</a>
-                    <a class="nav-link" href="#"></a>
-                </div>
-                <div class="col-12  ">
-                    <a href="" target="_blank" class="btn btn-outline-light"><i class="icon-mail-alt"></i></a>
-                    <a href="" target="_blank" class="btn btn-outline-light"><i class="icon-instagram"></i></a>
-                    <a href="" target="_blank" class="btn btn-outline-light"><i class="icon-paper-plane"></i></a>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav mx-auto">
+                    <a class="nav-link nav-item" aria-current="page" href="{{ url_for('main.index') }}">
+                        <i class="fas fa-home me-2"></i>Главная
+                    </a>
+                    <a class="nav-link nav-item" href="{{ url_for('contact.contact') }}">
+                        <i class="fas fa-phone me-2"></i>Контакты
+                    </a>
+                    <a class="nav-link nav-item" href="{{ url_for('prise.prise') }}">
+                        <i class="fas fa-tag me-2"></i>Прайс
+                    </a>
+                    <a class="nav-link nav-item" href="{{ url_for('trener.treners') }}">
+                        <i class="fas fa-users me-2"></i>Все тренера
+                    </a>
+                    {% if current_user.is_admin == True %}
+                    <a class="nav-link nav-item" href="{{ url_for('zapis.all_bookings') }}">
+                        <i class="fas fa-calendar-alt me-2"></i>Все записи
+                    </a>
+                    {% endif %}
                 </div>
                 
-                <div class="btn_zapis">
-                    <a class="btn btn-warning px-4 fw-bold" href="{{ url_for('zapis.zap') }}">Записаться</a>
+                <div class="navbar-social me-4">
+                    <a href="#" target="_blank" class="btn btn-outline-light btn-social">
+                        <i class="icon-mail-alt"></i>
+                    </a>
+                    <a href="#" target="_blank" class="btn btn-outline-light btn-social">
+                        <i class="icon-instagram"></i>
+                    </a>
+                    <a href="#" target="_blank" class="btn btn-outline-light btn-social">
+                        <i class="icon-paper-plane"></i>
+                    </a>
                 </div>
                 
+                <div class="navbar-actions d-flex align-items-center gap-3">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin == True %}
+                        <div class="nav-action">
+                            <a class="btn btn-gradient-primary btn-sm" href="{{ url_for('trener.add_trener')}}">
+                                <i class="fas fa-user-plus me-2"></i>Добавить тренера
+                            </a>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="nav-action">
+                            <a class="btn btn-gradient-warning btn-sm" href="{{ url_for('zapis.zap') }}">
+                                <i class="fas fa-calendar-plus me-2"></i>Записаться
+                            </a>
+                        </div>
+                        
+                        <div class="nav-action">
+                           <a class="btn btn-gradient-info btn-sm" href="{{ url_for('chat.chat')}}">
+                               <i class="fas fa-headset me-2"></i>Поддержка
+                           </a> 
+                        </div>
+                    {% else %}
+                        <div class="nav-action">
+                            <a class="btn btn-gradient-primary btn-sm" href="{{ url_for('login.login') }}">
+                                <i class="fas fa-sign-in-alt me-2"></i>Войти
+                            </a>
+                        </div>
+                            
+                        <div class="nav-action">
+                            <a class="btn btn-gradient-warning btn-sm" href="{{ url_for('register.register') }}">
+                                <i class="fas fa-user-plus me-2"></i>Регистрация
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container-fluid">
+    <!-- Основной контент -->
+    <main class="container-fluid main-content">
         {% block content %}{% endblock %}
     </main>
 
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <!-- Подключение jQuery (обязательно для Bootstrap 4) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-
-    <!-- Подключение Popper.js (нужен для некоторых компонентов) -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-
-    <!-- Подключение Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Скрипты -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        
+        // Плавная прокрутка для якорей
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    
+                    // Проверяем, что это чистый якорь
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            history.pushState(null, null, href);
+                        }
+                    }
+                });
+            });
+            
+            // Анимация навигации при скролле
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.custom-navbar');
+                if (window.scrollY > 100) {
+                    navbar.style.transform = 'translateY(-10px)';
+                    navbar.style.backdropFilter = 'blur(20px)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                    navbar.style.backdropFilter = 'blur(10px)';
+                }
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
 </body>
 
 </html>

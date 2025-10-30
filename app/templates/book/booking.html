@@ -72,12 +72,12 @@
         {{ form.client_phone(class="form-control", id="phone", placeholder="+7 (999) 999-99-99") }}
       </div>
       <div class="col-md-6">
-        <label for="trener_name" class="form-label">Имя тренера</label>
-        {{ form.trener_name(class="form-control", id="trener_name", placeholder="Введите имя тренера") }}
+        <label for="trener_name" class="form-label">Выберете тренера</label>
+        {{ form.trener_name(class="form-select") }}
       </div>
       <div class="col-md-6">
         <label for="time_slot" class="form-label">Время</label>
-        {{ form.time_slot(class="form-control", id="time_slot", placeholder="Выберите время") }}
+        {{ form.time_slot(class="form-control", id="time_slot") }}
       </div>
 
       <div class="col-12">
@@ -98,4 +98,47 @@
     </form>
   </div>
 </div>
+
+<!-- В конец файла booking.html ДОБАВЬ: -->
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+console.log("🎯 Начало теста SocketIO - ТОЛЬКО СЛОТЫ");
+
+const socket = io("/booking");
+
+// Тест подключения
+socket.on('connect_booking', function() {
+    console.log("✅ SocketIO подключен!");
+});
+
+
+socket.on("slots_response", function(data) {
+    console.log("⏰ Получены слоты от сервера:", data);
+    
+    const select = document.getElementById("time_slot");
+    select.innerHTML = "<option value=''>Выберите время</option>";
+
+    if (data.slots && data.slots.length > 0) {
+        data.slots.forEach(slot => {
+            const option = document.createElement("option");
+            option.value = slot;
+            option.textContent = slot;
+            select.appendChild(option);
+        });
+        console.log("✅ Время обновлено, доступно слотов:", data.slots.length);
+    } else {
+        select.innerHTML = "<option value=''>Нет доступного времени</option>";
+        console.log("❌ Нет доступных слотов");
+    }
+});
+
+// ✅ ОБРАБОТКА ОШИБОК
+socket.on('disconnect_booking', function() {
+    console.log("❌ SocketIO отключен!");
+});
+
+console.log("🎯 Код SocketIO выполнен - жду изменения даты/тренера...");
+</script>
+
 {% endblock %}
