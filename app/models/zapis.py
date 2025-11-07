@@ -8,8 +8,7 @@ import secrets
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_date = db.Column(db.Date, nullable=False, index=True)
-    start_time = db.Column(db.Time, nullable=False)
-    end_time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.String(20), default='09:00') 
 
     # Данные клиента
     client_name = db.Column(db.String(50), nullable=False)
@@ -18,33 +17,18 @@ class Booking(db.Model):
     
     # ✅ ИЗМЕНИТЬ: вместо имени тренера - связь с моделью Trener
     trener_id = db.Column(db.Integer, db.ForeignKey('trener.id'), nullable=False)
-    # Убрать: trener_name = db.Column(db.String(50), nullable=False)
-
+    
     status = db.Column(db.String(20), nullable=False, default='confirmed')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     cancel_token = db.Column(db.String(32), unique=True, nullable=False)
 
-    __table_args__ = (
-        CheckConstraint('end_time > start_time', name='check_time_sequence'),
-        CheckConstraint("status IN ('confirmed', 'cancelled', 'completed')", name='check_status'),
-    )
-    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not self.cancel_token:
             self.cancel_token = secrets.token_hex(16)
 
-    __table_args__ = (
-        CheckConstraint('end_time > start_time', name='check_time_sequence'),
-        CheckConstraint("status IN ('confirmed', 'cancelled', 'completed')", name='check_status'),
-    )
     
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Автогенерация cancel_token если не указан
-        if not self.cancel_token:
-            self.cancel_token = secrets.token_hex(16)
 
 class WorkingHours(db.Model):
     id = db.Column(db.Integer, primary_key=True)

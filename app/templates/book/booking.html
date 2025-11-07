@@ -2,64 +2,47 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-      <!-- Flash Messages -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="flash-message alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
-              <div class="d-flex align-items-center">
-                {% if category == 'success' %}
-                  <i class="bi bi-check-circle-fill me-2"></i>
-                {% elif category == 'danger' %}
-                  <i class="bi bi-exclamation-circle-fill me-2"></i>
-                {% elif category == 'warning' %}
-                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                {% else %}
-                  <i class="bi bi-info-circle-fill me-2"></i>
-                {% endif %}
-                <strong>{{ message }}</strong>
-              </div>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <!-- Form Errors -->
-      {% if form.errors %}
-        <div class="alert alert-danger shadow-sm" role="alert">
-          <div class="d-flex align-items-center mb-2">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+<div class="container mt-4">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+          <div class="d-flex align-items-center">
+            {% if category == 'success' %}
+              <i class="bi bi-check-circle-fill me-2"></i>
+            {% elif category == 'danger' %}
+              <i class="bi bi-exclamation-circle-fill me-2"></i>
+            {% elif category == 'warning' %}
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {% else %}
+              <i class="bi bi-info-circle-fill me-2"></i>
+            {% endif %}
+            <strong>{{ message }}</strong>
           </div>
-          <ul class="list-unstyled mb-0 ms-4">
-            {% for field, errors in form.errors.items() %}
-              {% for error in errors %}
-                <li><i class="bi bi-dot me-2"></i>{{ error }}</li>
-              {% endfor %}
-            {% endfor %}
-          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      {% endif %}
-    </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
 
 <div class="container py-5">
   <div class="content-block bg-light p-4 rounded shadow">
     <h2 class="mb-4 text-center">Форма записи</h2>
-    <form class="row g-3 needs-validation" novalidate method="POST">
+
+    <!-- ОБЯЗАТЕЛЬНО: скрытое поле должно быть ВНУТРИ формы -->
+    <form class="row g-3 needs-validation" novalidate method="POST" id="appoint_form">
       {{ form.hidden_tag() }}
 
       <div class="col-md-6">
         <label for="name" class="form-label">Имя</label>
         {{ form.client_name(class="form-control", id="name", placeholder="Введите ваше имя") }}
-        <div class="valid-feedback">Отлично!</div>
       </div>
 
       <div class="col-md-6">
         <label for="booking_date" class="form-label">Дата записи</label>
         {{ form.booking_date(class="form-control", id="booking_date", placeholder="Выберите дату") }}
-        <div class="valid-feedback">Отлично!</div>
       </div>
 
       <div class="col-md-6">
@@ -71,16 +54,29 @@
         <label for="phone" class="form-label">Телефон</label>
         {{ form.client_phone(class="form-control", id="phone", placeholder="+7 (999) 999-99-99") }}
       </div>
+
       <div class="col-md-6">
-        <label for="trener_name" class="form-label">Выберете тренера</label>
-        {{ form.trener_name(class="form-select") }}
-      </div>
-      <div class="col-md-6">
-        <label for="time_slot" class="form-label">Время</label>
-        {{ form.time_slot(class="form-control", id="time_slot") }}
+        <label for="trener_name" class="form-label">Выберите тренера</label>
+        {{ form.trener_name(class="form-select", id="trener_name") }}
       </div>
 
-      <div class="col-12">
+      <!-- ВАЖНО: скрытое поле должно иметь name="time_slot" -->
+      {{ form.time_slot(id="time_slot_hidden", required=true) }}
+
+      <label class="form-label mt-3">Время*</label>
+      <div id="time_slots_buttons" class="time-slots-container mt-2">
+        <div class="text-muted">Сначала выберите тренера</div>
+      </div>
+
+      {% if form.time_slot.errors %}
+        <div class="invalid-feedback d-block">
+          {% for error in form.time_slot.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="col-12 mt-3">
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="terms" required>
           <label class="form-check-label" for="terms">
@@ -99,46 +95,141 @@
   </div>
 </div>
 
-<!-- В конец файла booking.html ДОБАВЬ: -->
-
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script>
-console.log("🎯 Начало теста SocketIO - ТОЛЬКО СЛОТЫ");
+console.log("🎯 Запуск системы кнопок времени");
 
 const socket = io("/booking");
 
-// Тест подключения
-socket.on('connect_booking', function() {
-    console.log("✅ SocketIO подключен!");
+// ✅ Функция для обновления CSRF токена
+function refreshCSRFToken() {
+    fetch('/refresh-csrf', {
+        method: 'GET',
+        credentials: 'same-origin'
+    }).then(response => response.json())
+    .then(data => {
+        const csrfToken = document.querySelector('input[name="csrf_token"]');
+        if (csrfToken && data.csrf_token) {
+            csrfToken.value = data.csrf_token;
+        }
+    });
+}
+
+function createTimeSlotButtons(slots) {
+    const container = document.getElementById('time_slots_buttons');
+    const hiddenInput = document.getElementById('time_slot_hidden');
+    
+    container.innerHTML = '';
+    
+    if (!slots || slots.length === 0) {
+        container.innerHTML = '<div class="text-muted">Нет доступного времени</div>';
+        hiddenInput.value = '';
+        return;
+    }
+    
+    slots.forEach(slot => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'time-slot-btn btn btn-outline-primary m-1';
+        button.textContent = slot;
+        
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+
+            this.classList.add('selected', 'btn-primary');
+            this.classList.remove('btn-outline-primary');
+            
+            hiddenInput.value = slot;
+            console.log(`✅ Выбрано время: ${slot}`);
+        });
+        
+        container.appendChild(button);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("✅ DOM загружен");
+    
+    const trenerSelect = document.getElementById("trener_name");
+    const dateInput = document.getElementById("booking_date");
+
+    if (!trenerSelect) {
+        console.error("❌ Не найден select тренера");
+        return;
+    }
+
+    // При загрузке сразу подтягиваем слоты для первого тренера (если есть)
+    if (trenerSelect.options.length > 1) {
+        const firstTrenerId = trenerSelect.value;
+        console.log(`🔄 Автовыбор тренера ID: ${firstTrenerId}`);
+        document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
+        socket.emit("get_slots", { trener_id: firstTrenerId });
+    }
+
+    trenerSelect.addEventListener("change", function() {
+        const trenerId = this.value;
+        const selectedDate = dateInput.value;
+        document.getElementById('time_slot_hidden').value = '';
+
+        if (!trenerId) {
+            document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Сначала выберите тренера</div>';
+            return;
+        }
+
+        document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
+
+        if (selectedDate) {
+            socket.emit("view_booking", { trener_id: trenerId, booking_date: selectedDate });
+        } else {
+            socket.emit("get_slots", { trener_id: trenerId });
+        }
+    });
+
+    dateInput.addEventListener("change", function() {
+        const trenerId = trenerSelect.value;
+        const selectedDate = this.value;
+        if (trenerId && selectedDate) {
+            document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
+            socket.emit("view_booking", { trener_id: trenerId, booking_date: selectedDate });
+        }
+    });
 });
 
-
 socket.on("slots_response", function(data) {
-    console.log("⏰ Получены слоты от сервера:", data);
-    
-    const select = document.getElementById("time_slot");
-    select.innerHTML = "<option value=''>Выберите время</option>";
+    console.log("⏰ Получены слоты:", data);
+    createTimeSlotButtons(data.slots || []);
+});
 
-    if (data.slots && data.slots.length > 0) {
-        data.slots.forEach(slot => {
-            const option = document.createElement("option");
-            option.value = slot;
-            option.textContent = slot;
-            select.appendChild(option);
-        });
-        console.log("✅ Время обновлено, доступно слотов:", data.slots.length);
-    } else {
-        select.innerHTML = "<option value=''>Нет доступного времени</option>";
-        console.log("❌ Нет доступных слотов");
+socket.on("booking_response", function(data) {
+    console.log("📅 Получены доступные слоты:", data);
+    createTimeSlotButtons(data.available_slots || []);
+});
+
+// Временно замените обработчик отправки формы на более детальный
+const form = document.getElementById('appoint_form');
+form.addEventListener('submit', function(e) {
+    const hiddenInput = document.getElementById('time_slot_hidden');
+    const trenerSelect = document.getElementById('trener_name');
+    
+    console.log('🔍 DEBUG SUBMIT:');
+    console.log('Time slot value:', hiddenInput.value);
+    console.log('Trener selected:', trenerSelect.value);
+    console.log('Trener text:', trenerSelect.options[trenerSelect.selectedIndex].text);
+    
+    if (!hiddenInput.value) {
+        e.preventDefault();
+        alert('ОШИБКА: Выберите время! Текущее значение: ' + hiddenInput.value);
+        return false;
     }
 });
 
-// ✅ ОБРАБОТКА ОШИБОК
-socket.on('disconnect_booking', function() {
-    console.log("❌ SocketIO отключен!");
+
+socket.on('disconnect', function() {
+    console.log("❌ WebSocket отключен!");
 });
-
-console.log("🎯 Код SocketIO выполнен - жду изменения даты/тренера...");
 </script>
-
 {% endblock %}

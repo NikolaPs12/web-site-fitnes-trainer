@@ -20,6 +20,9 @@ class TrenerSchedule(db.Model):
     # Активен ли этот день для записи
     is_working = db.Column(db.Boolean, default=True)
     
+     # список рабочих часов в масиве
+    list_working_hours = db.Column(db.String(100), nullable=True) # список рабочих часов в масиве
+    
     __table_args__ = (
         CheckConstraint('day_of_week >= 0 AND day_of_week <= 6', name='check_day_range'),
         CheckConstraint('start_time < end_time', name='check_schedule_time'),

@@ -18,7 +18,12 @@ def add_trener():
         avatar_filename = None
         if form.avatar.data and form.avatar.data.filename:
             avatar_filename = save_picture(form.avatar.data)
-        
+        time_slots = []
+        start_time = int(form.start_time.data)
+        end_time =  int(form.end_time.data)
+        for hour in range(start_time, end_time):
+            time_slots.append(f"{hour:02d}:00-{hour+1:02d}:00")
+
         trener = Trener(
             all_name=form.all_name.data,
             avatar=avatar_filename,  # может быть None
@@ -26,7 +31,8 @@ def add_trener():
             instagram=form.instagram.data,
             vk=form.vk.data,
             telegram=form.telegram.data,
-            whatsapp=form.whatsapp.data
+            whatsapp=form.whatsapp.data,
+            list_working_hours=time_slots
         )
         
         try:

@@ -3,24 +3,26 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Все записи</h2>
-    {% if bookings %}
-        <div class="row">
-            {% for booking in bookings %}
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Запись #{{ booking.id }}</h5>
-                            <p class="card-text">Дата: {{ booking.booking_date }}</p>
-                            <p class="card-text">Время: {{ booking.start_time }} - {{ booking.end_time }}</p>
-                            <p class="card-text">Клиент: {{ booking.client_name }}</p>
+    
+        <h2>Все записи</h2>
+        {% if bookings %}
+            <div class="row">
+                {% for booking in bookings %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Запись #{{ booking.id }}</h5>
+                                <p class="card-text">Дата: {{ booking.booking_date }}</p>
+                                <p class="card-text">Время: {{ booking.start_time }} - {{ booking.end_time }}</p>
+                                <p class="card-text">Клиент: {{ booking.client_name }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>Записей пока нет.</p>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Записей пока нет.</p>
+        {% endif %}
+
 </div>
 {% endblock %}
