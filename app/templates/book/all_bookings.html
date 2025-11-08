@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    
+    {% if current_user.name == trener.all_name %}
         <h2>Все записи</h2>
         {% if bookings %}
             <div class="row">
@@ -23,6 +23,8 @@
         {% else %}
             <p>Записей пока нет.</p>
         {% endif %}
-
+    {% else %}
+            <h2>Записей нет</h2>
+    {% endif %}        
 </div>
 {% endblock %}

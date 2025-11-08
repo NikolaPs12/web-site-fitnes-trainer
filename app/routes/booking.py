@@ -20,7 +20,7 @@ def zap():
     if form.validate_on_submit():
         # ✅ ИСПРАВЛЕНО: QuerySelectField возвращает объект Trener, а не имя
         trener = form.trener_name.data  # Это объект Trener, а не строка!
-
+        print(f"🔍 DEBUG: Selected trener = {trener}")
         if not trener:
             flash('Тренер не найден.', 'danger')
             return render_template('book/booking.html', form=form)
@@ -37,18 +37,14 @@ def zap():
         if not time_slot:
             flash('Выберите время', 'danger')
             return render_template('book/booking.html', form=form)
-
-        # Если время содержит дефис, берем только первую часть
-        if '-' in time_slot:
-            time_slot = time_slot.split('-')[0].strip()
-
+    
         # Проверка доступности слота
         existing_booking = Booking.query.filter_by(
             trener_id=trener_id,
             booking_date=form.booking_date.data,
             time=time_slot
         ).first()
-        
+        print(f"🔍 DEBUG: existing_booking = {existing_booking}")
         if existing_booking:
             flash('Это время уже забронировано. Пожалуйста, выберите другое.', 'danger')
             return render_template('book/booking.html', form=form)
@@ -63,7 +59,7 @@ def zap():
             time=time_slot,
             cancel_token=secrets.token_hex(16)
         )
-        
+        print(f"🔍 DEBUG: new_booking = {new_booking}")
         try:
             db.session.add(new_booking)
             db.session.commit()
@@ -103,13 +99,13 @@ def test_flash():
 def all_bookings():    
     user_role = session.get('user_role')
     
-    if user_role == "trener":
+    if user_role == "trener" and current_user.name == Trener.query.filter_by(current_user.name).first().all_name:
         user_id = session.get('user_id')
         trener = Trener.query.filter_by(user_id=user_id).first()
         bookings = Booking.query.filter_by(trener_id=trener.id)\
-            .order_by(Booking.booking_date.desc(), Booking.start_time.desc())\
+            .order_by(Booking.booking_date.desc(), Booking.time.desc())\
             .all()
     else:
-        bookings = Booking.query.order_by(Booking.booking_date.desc(), Booking.start_time.desc()).all()
+        bookings = Booking.query.order_by(Booking.booking_date.desc(), Booking.time.desc()).all()
         trener = None
     return render_template('book/all_bookings.html', bookings=bookings, trener=trener)

@@ -2,47 +2,63 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <!-- Flash Messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="flash-message alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
-          <div class="d-flex align-items-center">
-            {% if category == 'success' %}
-              <i class="bi bi-check-circle-fill me-2"></i>
-            {% elif category == 'danger' %}
-              <i class="bi bi-exclamation-circle-fill me-2"></i>
-            {% elif category == 'warning' %}
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            {% else %}
-              <i class="bi bi-info-circle-fill me-2"></i>
-            {% endif %}
-            <strong>{{ message }}</strong>
+    <div class="container mt-4">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+              <div class="d-flex align-items-center">
+                {% if category == 'success' %}
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                {% elif category == 'danger' %}
+                  <i class="bi bi-exclamation-circle-fill me-2"></i>
+                {% elif category == 'warning' %}
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {% else %}
+                  <i class="bi bi-info-circle-fill me-2"></i>
+                {% endif %}
+                <strong>{{ message }}</strong>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Form Errors -->
+      {% if form.errors %}
+        <div class="alert alert-danger shadow-sm" role="alert">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
           </div>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <ul class="list-unstyled mb-0 ms-4">
+            {% for field, errors in form.errors.items() %}
+              {% for error in errors %}
+                <li><i class="bi bi-dot me-2"></i>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
         </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-</div>
+      {% endif %}
+    </div>
 
 <div class="container py-5">
   <div class="content-block bg-light p-4 rounded shadow">
     <h2 class="mb-4 text-center">Форма записи</h2>
-
-    <!-- ОБЯЗАТЕЛЬНО: скрытое поле должно быть ВНУТРИ формы -->
-    <form class="row g-3 needs-validation" novalidate method="POST" id="appoint_form">
+    <form class="row g-3 needs-validation" novalidate method="POST">
       {{ form.hidden_tag() }}
-
       <div class="col-md-6">
         <label for="name" class="form-label">Имя</label>
         {{ form.client_name(class="form-control", id="name", placeholder="Введите ваше имя") }}
+        <div class="valid-feedback">Отлично!</div>
       </div>
 
       <div class="col-md-6">
         <label for="booking_date" class="form-label">Дата записи</label>
         {{ form.booking_date(class="form-control", id="booking_date", placeholder="Выберите дату") }}
+        <div class="valid-feedback">Отлично!</div>
       </div>
 
       <div class="col-md-6">
@@ -54,29 +70,33 @@
         <label for="phone" class="form-label">Телефон</label>
         {{ form.client_phone(class="form-control", id="phone", placeholder="+7 (999) 999-99-99") }}
       </div>
+      <div class="col-md-6">
+        <label for="trener_name" class="form-label">Выберете тренера</label>
+        {{ form.trener_name(class="form-select") }}
+      </div>
 
       <div class="col-md-6">
-        <label for="trener_name" class="form-label">Выберите тренера</label>
-        {{ form.trener_name(class="form-select", id="trener_name") }}
-      </div>
-
-      <!-- ВАЖНО: скрытое поле должно иметь name="time_slot" -->
-      {{ form.time_slot(id="time_slot_hidden", required=true) }}
-
-      <label class="form-label mt-3">Время*</label>
-      <div id="time_slots_buttons" class="time-slots-container mt-2">
-        <div class="text-muted">Сначала выберите тренера</div>
-      </div>
-
-      {% if form.time_slot.errors %}
-        <div class="invalid-feedback d-block">
-          {% for error in form.time_slot.errors %}
-            {{ error }}
-          {% endfor %}
+        <label class="form-label">Время*</label>
+        
+        <!-- Скрытое поле для формы -->
+        {{ form.time_slot(id="time_slot_hidden") }}
+        
+        <!-- Контейнер для кнопок -->
+        <div id="time_slots_buttons" class="time-slots-container mt-2">
+            <div class="text-muted">Сначала выберите тренера</div>
         </div>
-      {% endif %}
+        
+        <!-- Сообщение об ошибке -->
+        {% if form.time_slot.errors %}
+            <div class="invalid-feedback d-block">
+                {% for error in form.time_slot.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
-      <div class="col-12 mt-3">
+      <div class="col-12">
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="terms" required>
           <label class="form-check-label" for="terms">
@@ -101,49 +121,48 @@ console.log("🎯 Запуск системы кнопок времени");
 
 const socket = io("/booking");
 
-// ✅ Функция для обновления CSRF токена
-function refreshCSRFToken() {
-    fetch('/refresh-csrf', {
-        method: 'GET',
-        credentials: 'same-origin'
-    }).then(response => response.json())
-    .then(data => {
-        const csrfToken = document.querySelector('input[name="csrf_token"]');
-        if (csrfToken && data.csrf_token) {
-            csrfToken.value = data.csrf_token;
-        }
-    });
-}
-
-function createTimeSlotButtons(slots) {
+// Функция создания кнопок времени
+function createTimeSlotButtons(slots, message = "") {
     const container = document.getElementById('time_slots_buttons');
     const hiddenInput = document.getElementById('time_slot_hidden');
     
+    // Очищаем контейнер
     container.innerHTML = '';
     
     if (!slots || slots.length === 0) {
-        container.innerHTML = '<div class="text-muted">Нет доступного времени</div>';
-        hiddenInput.value = '';
+        if (message) {
+            container.innerHTML = `<div class="text-muted">${message}</div>`;
+        } else {
+            container.innerHTML = '<div class="text-muted">Нет доступного времени на выбранную дату</div>';
+        }
+        hiddenInput.value = ''; // Очищаем скрытое поле
         return;
     }
     
+    // Создаем кнопки для каждого слота
     slots.forEach(slot => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'time-slot-btn btn btn-outline-primary m-1';
+        button.className = 'time-slot-btn';
         button.textContent = slot;
         
+        // Обработчик клика
         button.addEventListener('click', function() {
+            // Убираем выделение у всех кнопок
             document.querySelectorAll('.time-slot-btn').forEach(btn => {
                 btn.classList.remove('selected');
-                btn.classList.remove('btn-primary');
-                btn.classList.add('btn-outline-primary');
+                btn.style.background = 'white';
+                btn.style.color = 'inherit';
             });
-
-            this.classList.add('selected', 'btn-primary');
-            this.classList.remove('btn-outline-primary');
             
+            // Выделяем текущую кнопку
+            this.classList.add('selected');
+            this.style.background = '#0d6efd';
+            this.style.color = 'white';
+            
+            // Записываем значение в скрытое поле
             hiddenInput.value = slot;
+            
             console.log(`✅ Выбрано время: ${slot}`);
         });
         
@@ -151,6 +170,31 @@ function createTimeSlotButtons(slots) {
     });
 }
 
+// Обработчик получения слотов
+socket.on("available_slots_response", function(data) {
+    console.log("⏰ Получены слоты от сервера:", data);
+    
+    if (data.error) {
+        console.error("❌ Ошибка:", data.error);
+        createTimeSlotButtons([], data.error);
+        return;
+    }
+    
+    if (data.message) {
+        console.log("ℹ️ Сообщение:", data.message);
+        createTimeSlotButtons(data.slots, data.message);
+    } else {
+        console.log(`📊 Статистика: ${data.stats?.available || data.slots.length} свободных слотов`);
+        createTimeSlotButtons(data.slots);
+    }
+});
+
+// WebSocket обработчики
+socket.on('connect', function() {
+    console.log("✅ WebSocket подключен!");
+});
+
+// Основная логика
 document.addEventListener("DOMContentLoaded", function() {
     console.log("✅ DOM загружен");
     
@@ -162,74 +206,68 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
 
-    // При загрузке сразу подтягиваем слоты для первого тренера (если есть)
-    if (trenerSelect.options.length > 1) {
-        const firstTrenerId = trenerSelect.value;
-        console.log(`🔄 Автовыбор тренера ID: ${firstTrenerId}`);
-        document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
-        socket.emit("get_slots", { trener_id: firstTrenerId });
-    }
-
-    trenerSelect.addEventListener("change", function() {
-        const trenerId = this.value;
+    // Функция для загрузки доступных слотов
+    function loadAvailableSlots() {
+        const trenerId = trenerSelect.value;
         const selectedDate = dateInput.value;
-        document.getElementById('time_slot_hidden').value = '';
-
+        
+        console.log(`🔄 Загрузка слотов: тренер=${trenerId}, дата=${selectedDate}`);
+        
         if (!trenerId) {
             document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Сначала выберите тренера</div>';
             return;
         }
-
+        
         document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
-
-        if (selectedDate) {
-            socket.emit("view_booking", { trener_id: trenerId, booking_date: selectedDate });
-        } else {
-            socket.emit("get_slots", { trener_id: trenerId });
-        }
-    });
-
-    dateInput.addEventListener("change", function() {
-        const trenerId = trenerSelect.value;
-        const selectedDate = this.value;
-        if (trenerId && selectedDate) {
-            document.getElementById('time_slots_buttons').innerHTML = '<div class="text-muted">Загрузка времени...</div>';
-            socket.emit("view_booking", { trener_id: trenerId, booking_date: selectedDate });
-        }
-    });
-});
-
-socket.on("slots_response", function(data) {
-    console.log("⏰ Получены слоты:", data);
-    createTimeSlotButtons(data.slots || []);
-});
-
-socket.on("booking_response", function(data) {
-    console.log("📅 Получены доступные слоты:", data);
-    createTimeSlotButtons(data.available_slots || []);
-});
-
-// Временно замените обработчик отправки формы на более детальный
-const form = document.getElementById('appoint_form');
-form.addEventListener('submit', function(e) {
-    const hiddenInput = document.getElementById('time_slot_hidden');
-    const trenerSelect = document.getElementById('trener_name');
-    
-    console.log('🔍 DEBUG SUBMIT:');
-    console.log('Time slot value:', hiddenInput.value);
-    console.log('Trener selected:', trenerSelect.value);
-    console.log('Trener text:', trenerSelect.options[trenerSelect.selectedIndex].text);
-    
-    if (!hiddenInput.value) {
-        e.preventDefault();
-        alert('ОШИБКА: Выберите время! Текущее значение: ' + hiddenInput.value);
-        return false;
+        document.getElementById('time_slot_hidden').value = ''; // Сбрасываем выбранное время
+        
+        // ✅ Отправляем запрос на сервер с выбранными данными
+        socket.emit("get_available_slots", {
+            trener_id: trenerId,
+            booking_date: selectedDate || null
+        });
     }
+
+    // Автоматически выбираем первого тренера при загрузке
+    if (trenerSelect.options.length > 1) {
+        trenerSelect.selectedIndex = 1;
+        console.log(`🔄 Автовыбор тренера ID: ${trenerSelect.value}`);
+        loadAvailableSlots();
+    }
+
+    // Обработчик изменения тренера
+    trenerSelect.addEventListener("change", function() {
+        console.log(`👨‍🏫 Изменен тренер на ID: ${this.value}`);
+        loadAvailableSlots();
+    });
+
+    // Обработчик изменения даты
+    dateInput.addEventListener("change", function() {
+        console.log(`📅 Изменена дата на: ${this.value}`);
+        loadAvailableSlots();
+    });
 });
 
-
+// Обработка ошибок
 socket.on('disconnect', function() {
     console.log("❌ WebSocket отключен!");
 });
+
+// Обновление слотов после бронирования (если нужно)
+socket.on("slots_updated", function(data) {
+    console.log("🔄 Обновление слотов после бронирования:", data);
+    
+    const trenerSelect = document.getElementById("trener_name");
+    const dateInput = document.getElementById("booking_date");
+    const currentTrenerId = trenerSelect.value;
+    const currentDate = dateInput.value;
+    
+    // Если это тот же тренер и дата - обновляем слоты
+    if (currentTrenerId == data.trener_id && currentDate == data.booking_date) {
+        console.log("🔄 Перезагружаем слоты...");
+        loadAvailableSlots();
+    }
+});
 </script>
+
 {% endblock %}
